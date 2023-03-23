@@ -24,7 +24,7 @@ class LinkedList:
     # Insert a new head node
     def insert_beginning(self, new_value):
         new_node = Node(new_value)
-        new_node.set_next_node(self.head_node)
+        new_node.set_next_node(self.get_head_node())
         self.head_node = new_node
 
     # Insert a new tail node
@@ -32,9 +32,9 @@ class LinkedList:
         new_node = Node(new_value)
         current_node = self.head_node
 
-        while current_node.next_node is not None:
-            current_node = current_node.next_node
-        current_node.next_node = new_node
+        while current_node.get_next_node() is not None:
+            current_node = current_node.get_next_node()
+        current_node.set_next_node(new_node)
 
     # Return all the nodes in the list as a string
     def stringify_list(self):
@@ -44,20 +44,45 @@ class LinkedList:
         while current_node is not None:
             # Use str() to convert integers to strings
             string_list += str(current_node.value)
-            if current_node.next_node is not None:
+            if current_node.get_next_node() is not None:
                 string_list += ", "
-            current_node = current_node.next_node
+            current_node = current_node.get_next_node()
 
         string_list += "]"
         return string_list
 
+    # Remove the first node that contains a particular value
+    def remove_node(self, value_to_remove):
+        current_node = self.head_node
 
-ll = LinkedList(True)
+        # If the head node is the one to be deleted
+        if current_node.value == value_to_remove:
+            current_node = current_node.get_next_node()
+            return
+
+        # Traverse the linked list to find the node to be deleted
+        prev_node = None
+        while current_node.value != value_to_remove:
+            prev_node = current_node
+            current_node = prev_node.get_next_node()
+
+        # If the node to be deleted is not found
+        if current_node is None:
+            return
+
+        # Remove the node by connecting the previous node to the next node
+        prev_node.next_node = current_node.get_next_node()
+        current_node = None
+
+ll = LinkedList(10)
 ll.insert_beginning(70)
 ll.insert_beginning(5675)
 ll.insert_beginning(90)
 ll.insert_end(100)
-ll.insert_end(101)
+ll.insert_end(103)
 ll.insert_end(102)
 ll.insert_end(103)
+print(ll.stringify_list())
+
+ll.remove_node(103)
 print(ll.stringify_list())
